@@ -1,4 +1,7 @@
-# Skill: Service Unit Test Writer
+---
+name: service-unit-test-writer
+description: Writes Go unit tests for a single service in `internal/core/services/` following the project's table-driven pattern with mockery-generated mocks and testify assertions.
+---
 
 ## Purpose
 
