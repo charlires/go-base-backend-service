@@ -27,6 +27,9 @@ This project is a Go-based backend service that implements a simple music playli
 └── go.sum
 ```
 
+## Project Requirements
+- Go 1.26+
+
 ## Project Setup
 
 Populate the database using the provided SQL script:
@@ -43,4 +46,12 @@ go mod vendor
 Run the application:
 ```bash
 go run main.go
+```
+
+## Testing
+
+```bash
+go install go.uber.org/mock/mockgen@latest
+mockgen -version
+
 ```

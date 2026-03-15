@@ -23,11 +23,11 @@ func NewTrackSQLiteAdapter(db *sql.DB) *TrackSQLiteAdapter {
 	}
 }
 
-func (u *TrackSQLiteAdapter) GetTrackByID(ctx context.Context, id string) (domain.Track, error) {
+func (u *TrackSQLiteAdapter) GetTrackByID(ctx context.Context, id string) (*domain.Track, error) {
 	var track domain.Track
 	err := u.db.QueryRowContext(ctx, "SELECT id, title, artist FROM tracks WHERE id = ?", id).Scan(&track.ID, &track.Title, &track.Artist)
 	if err != nil {
-		return domain.Track{}, err
+		return nil, err
 	}
-	return track, nil
+	return &track, nil
 }
