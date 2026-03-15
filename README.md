@@ -28,7 +28,6 @@ This project is a Go-based backend service that implements a simple music playli
 ```
 
 ## Project Requirements
-- Go 1.26+
 
 ## Project Setup
 
@@ -51,7 +50,6 @@ go run main.go
 ## Testing
 
 ```bash
-go install go.uber.org/mock/mockgen@latest
-mockgen -version
+go test ./...
 
 ```

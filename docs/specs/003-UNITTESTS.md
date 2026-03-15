@@ -61,7 +61,7 @@ If the repository already uses a different generated-mocks path, keep using the 
 ## Test Case Pattern (Apply to All Services)
 
 1. Use **one table-driven test per service method** that includes all core and edge scenarios.
-2. Each test case should define **inputs** and expected **outputs/errors** aswell as **mocked dependency behavior**.
+2. Each test case should define **inputs** and expected **outputs/errors** as well as **mocked dependency behavior**.
 3. Dependency mock behavior can be configured per case, but assertions should focus on method contract: returned value, returned error, and whether dependency calls happened when expected.
 4. Include validation scenarios (e.g., empty/blank input) in the same table to keep behavior coverage centralized.
 5. For service method inputs, use descriptive field names that include `input` + parameter name (example: `inputUserID` for parameter `userID`).
@@ -79,7 +79,6 @@ If the repository already uses a different generated-mocks path, keep using the 
 
 ## Out of Scope (Current Phase)
 
-1. Unit tests for `track_service` and `playlist_service`.
-2. HTTP adapter tests (covered by integration tests later).
-3. Defining a strict numeric coverage threshold.
+1. HTTP adapter tests (covered by integration tests later).
+2. Defining a strict numeric coverage threshold.G
 
