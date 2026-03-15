@@ -18,11 +18,11 @@ func NewUserSQLiteAdapter(db *sql.DB) *UserSQLiteAdapter {
 	return &UserSQLiteAdapter{db: db}
 }
 
-func (u *UserSQLiteAdapter) GetUserByID(ctx context.Context, id string) (domain.User, error) {
+func (u *UserSQLiteAdapter) GetUserByID(ctx context.Context, id string) (*domain.User, error) {
 	var user domain.User
 	err := u.db.QueryRowContext(ctx, "SELECT id, username FROM users WHERE id = ?", id).Scan(&user.ID, &user.Username)
 	if err != nil {
-		return domain.User{}, err
+		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
