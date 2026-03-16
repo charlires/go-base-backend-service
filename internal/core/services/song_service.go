@@ -5,6 +5,7 @@ import (
 
 	"github.com/charlires/go-base-backend-service/internal/core/domain"
 	"github.com/charlires/go-base-backend-service/internal/core/ports"
+	"github.com/charlires/go-base-backend-service/internal/pkg/logger"
 )
 
 // Ensure implements TrackService interface
@@ -26,5 +27,6 @@ func NewTrackService(trackRepo ports.TrackRepository) TrackService {
 }
 
 func (s *trackService) GetTrackByID(ctx context.Context, id string) (domain.Track, error) {
+	logger.FromCtx(ctx).Debug("trackService.GetTrackByID", "track_id", id)
 	panic("unimplemented")
 }

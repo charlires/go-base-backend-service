@@ -7,6 +7,7 @@ import (
 
 	"github.com/charlires/go-base-backend-service/internal/core/domain"
 	"github.com/charlires/go-base-backend-service/internal/core/ports"
+	"github.com/charlires/go-base-backend-service/internal/pkg/logger"
 )
 
 // Ensure implements PlaylistRepository interface
@@ -23,6 +24,7 @@ func NewPlaylistSQLiteAdapter(db *sql.DB) *PlaylistSQLiteAdapter {
 }
 
 func (p *PlaylistSQLiteAdapter) AddTrackToPlaylist(ctx context.Context, playlistID string, trackID string) error {
+	logger.FromCtx(ctx).Debug("PlaylistSQLiteAdapter.AddTrackToPlaylist", "playlist_id", playlistID, "track_id", trackID)
 	err := p.db.QueryRowContext(ctx, "INSERT INTO playlist_tracks (playlist_id, track_id) VALUES (?, ?)", playlistID, trackID).Err()
 	if err != nil {
 		return err
@@ -31,6 +33,7 @@ func (p *PlaylistSQLiteAdapter) AddTrackToPlaylist(ctx context.Context, playlist
 }
 
 func (p *PlaylistSQLiteAdapter) CreatePlaylist(ctx context.Context, playlist domain.Playlist) (string, error) {
+	logger.FromCtx(ctx).Debug("PlaylistSQLiteAdapter.CreatePlaylist", "playlist", &playlist)
 	result, err := p.db.ExecContext(ctx, "INSERT INTO playlists (id, name, owner_id) VALUES (?, ?, ?)", playlist.ID, playlist.Name, playlist.OwnerID)
 	if err != nil {
 		return "", err
@@ -43,6 +46,7 @@ func (p *PlaylistSQLiteAdapter) CreatePlaylist(ctx context.Context, playlist dom
 }
 
 func (p *PlaylistSQLiteAdapter) GetPlaylistByID(ctx context.Context, id string) (domain.Playlist, error) {
+	logger.FromCtx(ctx).Debug("PlaylistSQLiteAdapter.GetPlaylistByID", "playlist_id", id)
 	var playlist domain.Playlist
 	err := p.db.QueryRowContext(ctx, "SELECT id, name, owner_id FROM playlists WHERE id = ?", id).Scan(&playlist.ID, &playlist.Name, &playlist.OwnerID)
 	if err != nil {
