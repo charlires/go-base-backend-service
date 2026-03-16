@@ -23,7 +23,7 @@ This document outlines the approach for implementing code generation for REST AP
 3. **Generated Code Structure**: Generated code is isolated in a `gen/` sub-package to make it unambiguous what is auto-generated vs. manually maintained. The handler implementation lives in the parent package and imports from `gen/`.
 
 ```
-internal/adapters/rest/
+internal/adapters/input/rest/
     gen/
         server.gen.go      <- generated: StrictServerInterface + net/http router setup
         types.gen.go       <- generated: canonical request/response types
@@ -37,7 +37,7 @@ package: gen
 generate:
   strict-server: true
   models: true
-output: internal/adapters/rest/gen/server.gen.go
+output: internal/adapters/input/rest/gen/server.gen.go
 ```
 
 5. **Code Generation Command**: Run the following command to regenerate the adapter code after any change to `openapi.yaml`:
@@ -46,10 +46,10 @@ output: internal/adapters/rest/gen/server.gen.go
 go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen --config=oapi-codegen.yaml openapi.yaml
 ```
 
-This should also be added as a `//go:generate` directive at the top of `internal/adapters/rest/handlers.go`:
+This should also be added as a `//go:generate` directive at the top of `internal/adapters/input/rest/handlers.go`:
 
 ```go
-//go:generate go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen --config=oapi-codegen.yaml openapi.yaml
+//go:generate go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen --config=../../../oapi-codegen.yaml ../../../openapi.yaml
 ```
 
 6. **Handler Implementation**: `handlers.go` implements the generated `StrictServerInterface`. Each method receives strongly-typed request structs and returns strongly-typed response structs as defined in `types.gen.go`. Mapping between generated types and `internal/core/domain/` types is done inside these handlers.
