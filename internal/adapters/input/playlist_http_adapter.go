@@ -58,7 +58,7 @@ func (a *PlaylistHTTPAdapter) CreatePlaylist(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	createdPlaylist, err := a.PlaylistService.CreatePlaylist(ctx, playlist)
+	createdPlaylist, err := a.PlaylistService.CreatePlaylist(ctx, &playlist)
 	if err != nil {
 		logger.FromCtx(ctx).Error("PlaylistHTTPAdapter.CreatePlaylist: failed to create playlist", "error", err)
 		http.Error(w, "Failed to create playlist", http.StatusInternalServerError)

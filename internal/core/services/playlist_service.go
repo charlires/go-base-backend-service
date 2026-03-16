@@ -9,8 +9,8 @@ import (
 )
 
 type PlaylistService interface {
-	GetPlaylistByID(ctx context.Context, id string) (domain.Playlist, error)
-	CreatePlaylist(ctx context.Context, playlist domain.Playlist) (domain.Playlist, error)
+	GetPlaylistByID(ctx context.Context, id string) (*domain.Playlist, error)
+	CreatePlaylist(ctx context.Context, playlist *domain.Playlist) (*domain.Playlist, error)
 	AddTrackToPlaylist(ctx context.Context, playlistID string, trackID string) error
 }
 
@@ -31,16 +31,16 @@ func (p *playlistService) AddTrackToPlaylist(ctx context.Context, playlistID str
 	panic("unimplemented")
 }
 
-func (p *playlistService) CreatePlaylist(ctx context.Context, playlist domain.Playlist) (domain.Playlist, error) {
+func (p *playlistService) CreatePlaylist(ctx context.Context, playlist *domain.Playlist) (*domain.Playlist, error) {
 	logger.FromCtx(ctx).Debug("playlistService.CreatePlaylist", "playlist", &playlist)
 	panic("unimplemented")
 }
 
-func (p *playlistService) GetPlaylistByID(ctx context.Context, id string) (domain.Playlist, error) {
+func (p *playlistService) GetPlaylistByID(ctx context.Context, id string) (*domain.Playlist, error) {
 	logger.FromCtx(ctx).Debug("playlistService.GetPlaylistByID", "playlist_id", id)
 	playlist, err := p.playlistRepo.GetPlaylistByID(ctx, id)
 	if err != nil {
-		return domain.Playlist{}, err
+		return nil, err
 	}
 	return playlist, nil
 }
