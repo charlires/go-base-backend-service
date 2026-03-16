@@ -32,7 +32,7 @@ func (p *PlaylistSQLiteAdapter) AddTrackToPlaylist(ctx context.Context, playlist
 	return nil
 }
 
-func (p *PlaylistSQLiteAdapter) CreatePlaylist(ctx context.Context, playlist domain.Playlist) (string, error) {
+func (p *PlaylistSQLiteAdapter) CreatePlaylist(ctx context.Context, playlist *domain.Playlist) (string, error) {
 	logger.FromCtx(ctx).Debug("PlaylistSQLiteAdapter.CreatePlaylist", "playlist", &playlist)
 	result, err := p.db.ExecContext(ctx, "INSERT INTO playlists (id, name, owner_id) VALUES (?, ?, ?)", playlist.ID, playlist.Name, playlist.OwnerID)
 	if err != nil {
