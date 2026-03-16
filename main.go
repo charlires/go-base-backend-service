@@ -3,7 +3,9 @@ package main
 import (
 	"database/sql"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -13,6 +15,11 @@ import (
 )
 
 func main() {
+	// Configure structured logging — JSON format, debug level, output to stdout
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	})))
+
 	// third party dependencies (e.g., database connections, external APIs) would be initialized here
 
 	db, err := sql.Open("sqlite3", "./database.db")
@@ -40,7 +47,7 @@ func main() {
 	http.HandleFunc("/playlists/{playlistid}/tracks", playlistHandler.AddTrackToPlaylist)
 
 	// go func() {
-	log.Println("starting server on :8080")
+	slog.Info("starting server on :8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}

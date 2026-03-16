@@ -7,6 +7,7 @@ import (
 
 	"github.com/charlires/go-base-backend-service/internal/core/domain"
 	"github.com/charlires/go-base-backend-service/internal/core/ports"
+	"github.com/charlires/go-base-backend-service/internal/pkg/logger"
 )
 
 var (
@@ -28,6 +29,7 @@ func NewUserService(userRepo ports.UserRepository) UserService {
 }
 
 func (s *userService) GetUserByID(ctx context.Context, id string) (*domain.User, error) {
+	logger.FromCtx(ctx).Debug("userService.GetUserByID", "user_id", id)
 	if strings.TrimSpace(id) == "" {
 		return nil, ErrUserIDRequired
 	}
