@@ -2,7 +2,6 @@ package rest
 
 import (
 	"context"
-	"log/slog"
 
 	"github.com/charlires/go-base-backend-service/internal/adapters/input/rest/gen"
 	"github.com/charlires/go-base-backend-service/internal/core/domain"
@@ -11,9 +10,6 @@ import (
 
 // GetPlaylistById handles GET /playlists/{playlistId}
 func (h *Handlers) GetPlaylistById(ctx context.Context, request gen.GetPlaylistByIdRequestObject) (gen.GetPlaylistByIdResponseObject, error) {
-	ctx = logger.ContextWithLogger(ctx, slog.Default().With("playlist_id", request.PlaylistId))
-	logger.FromCtx(ctx).Debug("Handlers.GetPlaylistById", "playlist_id", request.PlaylistId)
-
 	playlist, err := h.PlaylistService.GetPlaylistByID(ctx, request.PlaylistId)
 	if err != nil {
 		logger.FromCtx(ctx).Error("Handlers.GetPlaylistById: failed to get playlist", "error", err)
@@ -25,8 +21,6 @@ func (h *Handlers) GetPlaylistById(ctx context.Context, request gen.GetPlaylistB
 
 // CreatePlaylist handles POST /playlists
 func (h *Handlers) CreatePlaylist(ctx context.Context, request gen.CreatePlaylistRequestObject) (gen.CreatePlaylistResponseObject, error) {
-	logger.FromCtx(ctx).Debug("Handlers.CreatePlaylist")
-
 	if request.Body == nil {
 		return gen.CreatePlaylist400JSONResponse{Message: "Invalid request payload"}, nil
 	}
@@ -48,9 +42,6 @@ func (h *Handlers) CreatePlaylist(ctx context.Context, request gen.CreatePlaylis
 
 // AddTrackToPlaylist handles POST /playlists/{playlistId}/tracks/{trackId}
 func (h *Handlers) AddTrackToPlaylist(ctx context.Context, request gen.AddTrackToPlaylistRequestObject) (gen.AddTrackToPlaylistResponseObject, error) {
-	ctx = logger.ContextWithLogger(ctx, slog.Default().With("playlist_id", request.PlaylistId, "track_id", request.TrackId))
-	logger.FromCtx(ctx).Debug("Handlers.AddTrackToPlaylist", "playlist_id", request.PlaylistId, "track_id", request.TrackId)
-
 	if err := h.PlaylistService.AddTrackToPlaylist(ctx, request.PlaylistId, request.TrackId); err != nil {
 		logger.FromCtx(ctx).Error("Handlers.AddTrackToPlaylist: failed to add track to playlist", "error", err)
 		return gen.AddTrackToPlaylist500JSONResponse{Message: "Failed to add track to playlist"}, nil

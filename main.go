@@ -15,11 +15,26 @@ import (
 	"github.com/charlires/go-base-backend-service/internal/core/services"
 )
 
+// Log configuration constants. Adjust these to change the logging behaviour
+// without touching business logic.
+const (
+	logLevel  = slog.LevelDebug
+	logFormat = "json" // "json" | "text"
+)
+
+// newLogger builds a *slog.Logger from the package-level log config constants.
+func newLogger() *slog.Logger {
+	opts := &slog.HandlerOptions{Level: logLevel}
+	if logFormat == "text" {
+		return slog.New(slog.NewTextHandler(os.Stdout, opts))
+	}
+	return slog.New(slog.NewJSONHandler(os.Stdout, opts))
+}
+
 func main() {
-	// Configure structured logging — JSON format, debug level, output to stdout
-	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelDebug,
-	})))
+	// Configure structured logging from constants defined above.
+	appLogger := newLogger()
+	slog.SetDefault(appLogger)
 
 	// third party dependencies (e.g., database connections, external APIs) would be initialized here
 
@@ -40,7 +55,9 @@ func main() {
 	handlers := rest.NewHandlers(userService, trackService, playlistService)
 
 	slog.Info("starting server on :8080")
-	if err := http.ListenAndServe(":8080", gen.Handler(gen.NewStrictHandler(handlers, nil))); err != nil {
+	if err := http.ListenAndServe(":8080", gen.Handler(gen.NewStrictHandler(handlers, []gen.StrictMiddlewareFunc{
+		rest.NewLoggingMiddleware(appLogger),
+	}))); err != nil {
 		log.Fatal(err)
 	}
 }
