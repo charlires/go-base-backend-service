@@ -9,7 +9,8 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 
-	"github.com/charlires/go-base-backend-service/internal/adapters/input"
+	"github.com/charlires/go-base-backend-service/internal/adapters/input/rest"
+	"github.com/charlires/go-base-backend-service/internal/adapters/input/rest/gen"
 	"github.com/charlires/go-base-backend-service/internal/adapters/output"
 	"github.com/charlires/go-base-backend-service/internal/core/services"
 )
@@ -36,21 +37,10 @@ func main() {
 	trackService := services.NewTrackService(trackRepository)
 	playlistService := services.NewPlaylistService(playlistRepository, userRepository)
 
-	userHandler := input.NewUserHTTPAdapter(userService)
-	trackHandler := input.NewTrackHTTPAdapter(trackService)
-	playlistHandler := input.NewPlaylistHTTPAdapter(playlistService)
+	handlers := rest.NewHandlers(userService, trackService, playlistService)
 
-	http.HandleFunc("/users/{userid}", userHandler.GetUserByID)
-	http.HandleFunc("/tracks/{trackid}", trackHandler.GetTrackByID)
-	http.HandleFunc("/playlists/{playlistid}", playlistHandler.GetPlaylistByID)
-	http.HandleFunc("/playlists", playlistHandler.CreatePlaylist)
-	http.HandleFunc("/playlists/{playlistid}/tracks", playlistHandler.AddTrackToPlaylist)
-
-	// go func() {
 	slog.Info("starting server on :8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8080", gen.Handler(gen.NewStrictHandler(handlers, nil))); err != nil {
 		log.Fatal(err)
 	}
-	// }()
-	// println("Hello, World!")
 }

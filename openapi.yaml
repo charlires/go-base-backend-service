@@ -1,0 +1,229 @@
+openapi: "3.0.3"
+info:
+  title: Go Base Backend Service
+  version: "1.0.0"
+
+paths:
+  /users/{userId}:
+    get:
+      operationId: getUserById
+      summary: Get a user by ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /tracks/{trackId}:
+    get:
+      operationId: getTrackById
+      summary: Get a track by ID
+      parameters:
+        - name: trackId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Track found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Track"
+        "404":
+          description: Track not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /playlists:
+    post:
+      operationId: createPlaylist
+      summary: Create a new playlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePlaylistRequest"
+      responses:
+        "201":
+          description: Playlist created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Playlist"
+        "400":
+          description: Invalid request payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /playlists/{playlistId}:
+    get:
+      operationId: getPlaylistById
+      summary: Get a playlist by ID
+      parameters:
+        - name: playlistId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Playlist found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Playlist"
+        "404":
+          description: Playlist not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /playlists/{playlistId}/tracks/{trackId}:
+    post:
+      operationId: addTrackToPlaylist
+      summary: Add a track to a playlist
+      parameters:
+        - name: playlistId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: trackId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Track added to playlist
+        "404":
+          description: Playlist or track not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - username
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+
+    Track:
+      type: object
+      required:
+        - id
+        - title
+        - artist
+        - album
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        artist:
+          type: string
+        album:
+          type: string
+
+    Playlist:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - owner_id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        owner_id:
+          type: string
+        tracks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Track"
+
+    CreatePlaylistRequest:
+      type: object
+      required:
+        - name
+        - description
+        - owner_id
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        owner_id:
+          type: string
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
