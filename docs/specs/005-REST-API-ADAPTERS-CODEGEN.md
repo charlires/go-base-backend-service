@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the approach for implementing code generation for REST API adapters in the Go-based backend service project. The goal is to automate the creation of boilerplate code for HTTP handlers, request parsing, and response formatting based on an OpenAPI specification.
+The goal of this specification is to define a a way to generate REST API adapters in the Go-based backend service project. This will automate the creation of boilerplate code for HTTP handlers, request parsing, and response formatting based on an OpenAPI specification. By using code generation, we can ensure consistency across all API endpoints, reduce manual coding errors, and speed up development when adding new endpoints or modifying existing ones.
 
 ## Decisions
 
